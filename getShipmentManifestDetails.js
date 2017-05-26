@@ -21,9 +21,8 @@ exports.getShipmentManifestDetails = function(req, res, next) {
       return next(new restify.myError.ValidationError(err));
     }
     maindb.sequelize
-      .query('EXEC tablename :ShippingIds, :ClientID, :FromDate, :ToDate', {
+      .query('EXEC tablename :id, :nymber, :FromDate, :ToDate', {
         replacements: {
-          // clientId create rowId of AddManifest Deatil Table
         id: '',
         number: 29,
         FromDate:null,
