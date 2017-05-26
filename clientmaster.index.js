@@ -1,14 +1,14 @@
 'use strict';
 
-const controller = require('./service');
-// const BASE_URI = '/api/clientmaster';
+const controller = require('./fetch');
+// const BASE_URI = '/api/student';
 //
 // module.exports = function(router) {
-//   router.post(BASE_URI,  controller.create);
+//   router.post(url,  controller.create);
 // };
 
 // 'use strict';
-// const services = require('./clientmaster');
+// const services = require('./database');
 
 exports.init = function() {
   controller.start();
