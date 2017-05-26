@@ -3,8 +3,8 @@ const restify = require('restify');
 const bunyan = require('bunyan');
 const moment = require('moment');
 const CronJob = require('cron').CronJob;
-const logger = restify.getLogger('ClientmasterService');
-const maindb = require('../../../storage/checkoutdb/models');
+const logger = restify.getLogger('newservice');
+const maindb = require('../../../storage/data/models');
 const db = require('../../../storage/main/models');
 //const loggers = require('../logger');
 const loggers = bunyan.createLogger({
@@ -22,13 +22,13 @@ const loggers = bunyan.createLogger({
 
 // exports.create = (req, res, next) => {
 //   return maindb.sequelize
-//   .query('SELECT * FROM ClientMaster ', {
+//   .query('SELECT * FROM abc ', {
 //     replacements:[],
 //     type: maindb.sequelize.QueryTypes.SELECT
 //   }).then((data) => {
 //     logger.debug(data);
 //     res.send(data);
-//     // return db.clientmaster
+//     // return db.abc
 //     // .bulkCreate(data, { individualHooks: true })
 //     // .then((success) => {
 //     //   logger.debug('success====', success);
@@ -44,10 +44,10 @@ const loggers = bunyan.createLogger({
 const getLastSyncservice = () => {
     return new Promise((resolve) => {
         // db.schedularMeta.removeAttribute('id');
-        return db.schedularMeta
+        return db.database
             .findOne({
                 where: {
-                    name: 'xbServices'
+                    name: 'data'
                 },
                 raw: true
             })
@@ -64,8 +64,8 @@ const getLastSyncservice = () => {
     });
 };
 
-const setLastSyncService = (req, res, next) => {
-    return db.clientmasterr
+const newservice = (req, res, next) => {
+    return db.abc
         .findOne({
             order: '"createdAt" DESC',
             attributes: ['createdAt'],
@@ -75,14 +75,14 @@ const setLastSyncService = (req, res, next) => {
         //   .findAll()
         .then((services) => {
             //       services.createdAt = new Date();
-            logger.debug('services======', services);
+            logger.debug('services', services);
             return db.schedularsmeta
                 .upsert({
-                    name: 'xbServices',
+                    name: 'myservice',
                     syncAt: services.createdAt
                 })
                 .then((data) => {
-                    logger.debug('data=====', data);
+                    logger.debug('data', data);
                     // return next();
                 })
                 .catch((err) => {
@@ -96,9 +96,9 @@ const setLastSyncService = (req, res, next) => {
 
 const execute = () => {
     return new Promise((resolve, reject) => {
-        logger.debug('syncing xpressbees services...');
+        logger.debug('syncdata...');
         return maindb.sequelize
-            .query('SELECT * FROM ClientMaster with(nolock) ', {
+            .query('SELECT * FROM database with(nolock) ', {
                 replacements: [],
                 type: maindb.sequelize.QueryTypes.SELECT
             }).then((res) => {
@@ -110,19 +110,18 @@ const execute = () => {
 };
 
 const init = () => {
-    setLastSyncService();
+    newservice();
     return execute()
         .then((rows) => {
-            loggers.debug('rows==', rows);
+            loggers.debug('rows', rows);
             rows.forEach(function(sync) {
-                // logger.debug('syncing data=====', sync);
                 sync.createdAt = new Date();
                 sync.updatedAt = new Date();
-                db.clientmasterr.upsert(sync)
+                db.abc.upsert(sync)
                     .then((data) => {
-                        loggers.debug('aaaaaaaaaaaaaaaaaaaaaaa=====', data);
+                        loggers.debug('Data', data);
                     }).catch((err) => {
-                        loggers.error('error in mssql connection : ', err);
+                        loggers.error('error in connection : ', err);
                     });
             });
             //In cases where no service requests were found
