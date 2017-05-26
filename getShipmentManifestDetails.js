@@ -4,7 +4,7 @@ const restify = require('restify');
 const Joi = require('joi');
 const maindb = require('../../../storage/abc/models');
 
-exports.getShipmentManifestDetails = function(req, res, next) {
+exports.methodname = function(req, res, next) {
   const schema = Joi.object().keys({
     name: Joi.string().required(),
     fullname: Joi.string().required(),
